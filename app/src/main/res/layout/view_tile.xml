@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/tile_w" android:layout_height="wrap_content"
+    android:clipChildren="false" android:clipToPadding="false"
+    android:focusable="true"
+    android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/card"
+        android:layout_width="@dimen/tile_w" android:layout_height="@dimen/tile_h"
+        android:background="@drawable/tile_bg"
+        android:elevation="6dp">
+        <ImageView
+            android:id="@+id/banner"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:importantForAccessibility="no" android:scaleType="centerCrop" />
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp" android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no" android:scaleType="fitCenter" />
+        <View
+            android:id="@+id/moveRing"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:background="@drawable/tile_move" android:visibility="gone" />
+    </FrameLayout>
+    <!-- "In Dock" indicator: a short bar under the card -->
+    <View
+        android:id="@+id/dockDot"
+        android:layout_width="14dp" android:layout_height="3dp"
+        android:layout_gravity="center_horizontal" android:layout_marginTop="6dp"
+        android:background="@drawable/dock_dot" android:visibility="gone" />
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end" android:gravity="center" android:maxLines="1"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/text_primary" android:textSize="11sp" />
+</LinearLayout>

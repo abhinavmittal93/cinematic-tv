@@ -1,0 +1,18 @@
+<resources>
+    <color name="bg">#FF000000</color>
+    <color name="text_primary">#FFF5F5F7</color>
+    <color name="text_secondary">#99EBEBF5</color>
+    <color name="text_tertiary">#4DEBEBF5</color>
+    <color name="tile_bg">#FF1C1C1E</color>
+    <color name="sheet_bg">#E61C1C1E</color>
+    <color name="hairline">#1FFFFFFF</color>
+    <color name="glass">#26FFFFFF</color>
+    <color name="glass_strong">#3DFFFFFF</color>
+    <color name="focus_fill">#FFF5F5F7</color>
+    <color name="on_focus">#FF0B0B0D</color>
+    <color name="accent">#FF0A84FF</color>
+    <color name="ok">#FF30D158</color>
+    <color name="chip_bg">#26FFFFFF</color>
+    <color name="chip_bg_focus">#FFF5F5F7</color>
+    <color name="move_ring">#FF0A84FF</color>
+</resources>

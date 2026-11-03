@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp" android:height="180dp" android:viewportWidth="320" android:viewportHeight="180">
+    <path android:fillColor="#FF0B0C10" android:pathData="M0,0h320v180h-320z" />
+    <path android:fillColor="#FF2A1F4F" android:pathData="M180,0h140v180h-220z" />
+    <path android:fillColor="#FF16304A" android:pathData="M0,120h320v60h-320z" android:fillAlpha="0.6" />
+    <!-- rounded frame -->
+    <path android:strokeColor="#FFF5F5F7" android:strokeWidth="6" android:fillColor="#00000000"
+        android:pathData="M58,52h84a12,12 0,0 1,12 12v52a12,12 0,0 1,-12 12h-84a12,12 0,0 1,-12 -12v-52a12,12 0,0 1,12 -12z" />
+    <!-- play glyph -->
+    <path android:fillColor="#FFF5F5F7" android:pathData="M88,70L118,90L88,110Z" />
+    <!-- wordmark bars (stylised "CINEMATIC TV") -->
+    <path android:fillColor="#FFF5F5F7" android:pathData="M172,74h104v10h-104z" />
+    <path android:fillColor="#B3F5F5F7" android:pathData="M172,96h64v8h-64z" />
+</vector>

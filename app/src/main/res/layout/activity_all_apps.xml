@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#FF000000">
+
+    <!-- Soft photo backdrop: a quarter-resolution decode upscaled reads as a free blur. -->
+    <ImageView
+        android:id="@+id/backdrop"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:alpha="0" android:importantForAccessibility="no" android:scaleType="centerCrop" />
+    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#B3000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:gravity="bottom" android:orientation="horizontal"
+            android:paddingStart="@dimen/edge" android:paddingEnd="@dimen/edge">
+            <TextView style="@style/T.Display"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/all_apps" android:textSize="30sp" />
+            <TextView android:id="@+id/count" style="@style/T.Body"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginStart="12dp" android:layout_marginBottom="6dp" />
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="220dp" android:layout_height="36dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/search_bg"
+                android:drawableStart="@drawable/ic_search" android:drawablePadding="8dp"
+                android:drawableTint="@color/text_secondary"
+                android:hint="@string/search_hint" android:imeOptions="actionSearch|flagNoExtractUi"
+                android:inputType="text" android:maxLines="1"
+                android:nextFocusDown="@+id/filters"
+                android:paddingStart="12dp" android:paddingEnd="12dp"
+                android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Filter pills -->
+        <LinearLayout
+            android:id="@+id/filters"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            android:paddingStart="40dp" android:paddingEnd="@dimen/edge" />
+
+        <!-- Grid -->
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+            android:layout_marginTop="6dp"
+            android:clipChildren="false"
+            android:fadingEdgeLength="36dp" android:requiresFadingEdge="vertical"
+            android:overScrollMode="never" android:scrollbars="none"
+            android:paddingBottom="0dp">
+            <LinearLayout
+                android:id="@+id/sections"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:clipChildren="false" android:clipToPadding="false"
+                android:orientation="vertical"
+                android:paddingTop="22dp" android:paddingBottom="120dp" />
+        </ScrollView>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noResults" style="@style/T.Body"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="center" android:textSize="14sp" android:visibility="gone" />
+
+    <!-- Context hint for the focused app -->
+    <TextView
+        android:id="@+id/hintPill"
+        android:layout_width="wrap_content" android:layout_height="32dp"
+        android:layout_gravity="bottom|center_horizontal" android:layout_marginBottom="20dp"
+        android:alpha="0"
+        android:background="@drawable/pill_bg"
+        android:fontFamily="sans-serif-medium" android:gravity="center"
+        android:paddingStart="18dp" android:paddingEnd="18dp"
+        android:textColor="@color/text_primary" android:textSize="11sp" />
+</FrameLayout>

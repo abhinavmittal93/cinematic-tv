@@ -1,0 +1,62 @@
+<resources>
+    <style name="Theme.CinematicTV" parent="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
+        <item name="android:windowBackground">@drawable/wallpaper</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:defaultFocusHighlightEnabled">false</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Theme.CinematicTV.Panel" parent="Theme.CinematicTV">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.55</item>
+        <item name="android:windowAnimationStyle">@style/PanelAnim</item>
+    </style>
+    <style name="PanelAnim" parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@anim/sheet_in</item>
+        <item name="android:windowExitAnimation">@anim/sheet_out</item>
+    </style>
+
+    <style name="T" />
+    <!-- Type scale (SF-like: tight tracking on large sizes) -->
+    <style name="T.Display"><item name="android:fontFamily">sans-serif-medium</item><item name="android:textSize">34sp</item>
+        <item name="android:letterSpacing">-0.01</item><item name="android:textColor">@color/text_primary</item></style>
+    <style name="T.Title"><item name="android:fontFamily">sans-serif-medium</item><item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text_primary</item></style>
+    <style name="T.Body"><item name="android:fontFamily">sans-serif</item><item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_secondary</item></style>
+    <style name="T.Caption"><item name="android:fontFamily">sans-serif-medium</item><item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.08</item><item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/text_tertiary</item></style>
+
+    <style name="RoundButton">
+        <item name="android:layout_width">@dimen/round_btn</item>
+        <item name="android:layout_height">@dimen/round_btn</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:background">@drawable/round_btn_bg</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:tint">@color/on_glass</item>
+    </style>
+
+    <style name="Chip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/row_bg</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:drawableTint">@color/on_glass</item>
+        <item name="android:textColor">@color/on_glass</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+</resources>

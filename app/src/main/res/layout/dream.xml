@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#FF000000">
+    <ImageView android:id="@+id/photoA" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:alpha="0" android:importantForAccessibility="no" android:scaleType="centerCrop" />
+    <ImageView android:id="@+id/photoB" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:alpha="0" android:importantForAccessibility="no" android:scaleType="centerCrop" />
+    <View android:layout_width="match_parent" android:layout_height="200dp" android:layout_gravity="bottom"
+        android:background="@drawable/dream_scrim" />
+
+    <LinearLayout
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="@dimen/edge" android:layout_marginBottom="36dp"
+        android:orientation="vertical">
+        <TextClock
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light" android:format12Hour="h:mm" android:format24Hour="HH:mm"
+            android:letterSpacing="-0.02" android:shadowColor="#80000000" android:shadowRadius="8"
+            android:textColor="@color/text_primary" android:textSize="48sp" />
+        <TextClock
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium" android:format12Hour="EEEE, d MMMM" android:format24Hour="EEEE, d MMMM"
+            android:shadowColor="#80000000" android:shadowRadius="8"
+            android:textColor="@color/text_secondary" android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/caption"
+        android:layout_width="360dp" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/edge" android:layout_marginBottom="40dp"
+        android:alpha="0" android:gravity="end" android:orientation="vertical">
+        <TextView android:id="@+id/capTitle"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end"
+            android:shadowColor="#80000000" android:shadowRadius="8"
+            android:textColor="@color/text_primary" android:textSize="14sp" />
+        <TextView android:id="@+id/capSub"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:gravity="end" android:maxLines="2" android:ellipsize="end"
+            android:shadowColor="#80000000" android:shadowRadius="8"
+            android:textColor="@color/text_secondary" android:textSize="11sp" />
+    </LinearLayout>
+</FrameLayout>

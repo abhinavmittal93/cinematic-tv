@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:dither="true">
+    <!-- Let the photo run full-screen; darken only enough for the text and Dock. -->
+    <gradient android:angle="270" android:startColor="#00000000" android:centerColor="#40000000"
+        android:endColor="#D9000000" android:centerY="0.45" />
+</shape>

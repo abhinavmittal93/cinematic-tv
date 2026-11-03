@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <!-- Top shelf: focused app's artwork, cross-faded between two views. Upscaling gives a soft, free "blur". -->
+    <ImageView
+        android:id="@+id/heroA"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:alpha="0" android:importantForAccessibility="no" android:scaleType="centerCrop" />
+    <ImageView
+        android:id="@+id/heroB"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:alpha="0" android:importantForAccessibility="no" android:scaleType="centerCrop" />
+    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/hero_scrim_left" />
+    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/hero_scrim_bottom" />
+    <View android:layout_width="match_parent" android:layout_height="96dp" android:background="@drawable/hero_scrim_top" />
+
+    <!-- Top bar: system buttons left, clock right -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/edge" android:layout_marginTop="28dp"
+        android:gravity="center_vertical" android:orientation="horizontal">
+        <ImageView android:id="@+id/btnAllApps" style="@style/RoundButton" android:contentDescription="@string/all_apps" android:src="@drawable/ic_apps" />
+        <ImageView android:id="@+id/btnSearch" style="@style/RoundButton" android:contentDescription="@string/search" android:src="@drawable/ic_search" />
+        <ImageView android:id="@+id/btnInputs" style="@style/RoundButton" android:contentDescription="@string/inputs" android:src="@drawable/ic_input" />
+        <ImageView android:id="@+id/btnNotifications" style="@style/RoundButton" android:contentDescription="@string/notifications" android:src="@drawable/ic_bell" />
+        <ImageView android:id="@+id/btnSettings" style="@style/RoundButton" android:contentDescription="@string/quick_settings" android:src="@drawable/ic_settings" />
+        <TextView
+            android:id="@+id/topLabel"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:alpha="0"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_primary" android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="24dp" android:layout_marginEnd="@dimen/edge"
+        android:gravity="end" android:orientation="vertical">
+        <TextClock
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light" android:format12Hour="h:mm" android:format24Hour="HH:mm"
+            android:letterSpacing="-0.02"
+            android:textColor="@color/text_primary" android:textSize="28sp" />
+        <TextClock
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="-2dp"
+            android:fontFamily="sans-serif-medium" android:format12Hour="EEE d MMM" android:format24Hour="EEE d MMM"
+            android:textColor="@color/text_secondary" android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Hero caption -->
+    <LinearLayout
+        android:id="@+id/heroText"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="@dimen/edge" android:layout_marginBottom="196dp"
+        android:orientation="vertical">
+        <TextView android:id="@+id/heroKicker" style="@style/T.Caption"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/up_next" />
+        <TextView android:id="@+id/heroTitle" style="@style/T.Display"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" android:maxLines="1" android:ellipsize="end" />
+        <TextView android:id="@+id/heroHint" style="@style/T.Body"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" android:text="@string/hero_hint" />
+    </LinearLayout>
+
+    <!-- Photo caption -->
+    <LinearLayout
+        android:id="@+id/photoCaption"
+        android:layout_width="320dp" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/edge" android:layout_marginBottom="200dp"
+        android:alpha="0" android:gravity="end" android:orientation="vertical">
+        <TextView
+            android:id="@+id/photoTitle"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end"
+            android:shadowColor="#99000000" android:shadowRadius="6"
+            android:textColor="@color/text_primary" android:textSize="12sp" />
+        <TextView
+            android:id="@+id/photoSub"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:gravity="end" android:maxLines="2" android:ellipsize="end"
+            android:shadowColor="#99000000" android:shadowRadius="6"
+            android:textColor="@color/text_secondary" android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- Dock -->
+    <FrameLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/dock_plate_inset"
+        android:clipChildren="false" android:clipToPadding="false">
+        <HorizontalScrollView
+            android:id="@+id/favScroll"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:clipChildren="false" android:clipToPadding="false"
+            android:overScrollMode="never" android:scrollbars="none"
+            android:paddingStart="@dimen/edge" android:paddingEnd="@dimen/edge"
+            android:paddingTop="26dp" android:paddingBottom="10dp">
+            <LinearLayout
+                android:id="@+id/favRow"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:clipChildren="false" android:clipToPadding="false"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+        <TextView
+            android:id="@+id/emptyFavs" style="@style/T.Body"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/empty_favs" android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Edit-mode controls -->
+    <TextView
+        android:id="@+id/editBar"
+        android:layout_width="wrap_content" android:layout_height="40dp"
+        android:layout_gravity="top|center_horizontal" android:layout_marginTop="28dp"
+        android:background="@drawable/pill_bg"
+        android:fontFamily="sans-serif-medium" android:gravity="center"
+        android:paddingStart="22dp" android:paddingEnd="22dp"
+        android:text="@string/edit_hint"
+        android:textColor="@color/text_primary" android:textSize="12sp"
+        android:visibility="gone" />
+</FrameLayout>
