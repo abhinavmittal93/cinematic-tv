@@ -105,7 +105,11 @@ object AppRepository {
             ?: pm.getLaunchIntentForPackage(entry.packageName)
             ?: return false
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
-        return try { context.startActivity(intent); true } catch (t: Throwable) {
+        return try {
+            context.startActivity(intent)
+            Prefs(context).recordLaunch(entry.packageName)
+            true
+        } catch (t: Throwable) {
             Log.w(TAG, "Cannot launch ${entry.packageName}", t); false
         }
     }

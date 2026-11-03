@@ -19,7 +19,6 @@
     <string name="app_unavailable">%1$s can\'t be opened</string>
     <string name="added_fav">Added %1$s to the Dock</string>
     <string name="removed_fav">Removed %1$s from the Dock</string>
-    <string name="up_next">Up Next</string>
     <string name="hero_hint">Press OK to open · Hold OK to edit the Dock</string>
     <string name="edit_hint">OK  Pick up   ·   Menu  Remove   ·   Back  Done</string>
     <string name="edit_hint_carry">◀ ▶  Move   ·   OK  Drop</string>
@@ -48,4 +47,17 @@
         <item quantity="one">%1$d app</item>
         <item quantity="other">%1$d apps</item>
     </plurals>
+    <string name="f_recent">Recent</string>
+    <string name="ctv_settings">Cinematic TV Settings</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="seconds">Every %1$d seconds</string>
+    <string name="opt_online_photos">Daily photos (online)</string>
+    <string name="opt_photo_speed">Change photo</string>
+    <string name="opt_dream_clock">Screensaver clock</string>
+    <string name="opt_dream_motion">Screensaver motion</string>
+    <string name="opt_preview">Preview screensaver</string>
+    <string name="opt_system_screensaver">System screensaver settings</string>
+    <string name="opt_clear_recent">Clear recently used</string>
+    <string name="recent_cleared">Recently used cleared</string>
 </resources>

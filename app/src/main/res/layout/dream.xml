@@ -10,6 +10,7 @@
         android:background="@drawable/dream_scrim" />
 
     <LinearLayout
+        android:id="@+id/clockBlock"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_marginStart="@dimen/edge" android:layout_marginBottom="36dp"

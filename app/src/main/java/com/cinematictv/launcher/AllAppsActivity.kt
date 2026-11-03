@@ -28,6 +28,7 @@ class AllAppsActivity : Activity() {
         companion object {
             val ALL = Filter(R.string.f_all)
             val DOCK = Filter(R.string.f_dock)
+            val RECENT = Filter(R.string.f_recent)
             fun of(c: AppCategory) = Filter(c.label, c)
         }
     }
@@ -121,12 +122,14 @@ class AllAppsActivity : Activity() {
     private fun matches(e: AppEntry, f: Filter): Boolean = when {
         f == Filter.ALL -> true
         f == Filter.DOCK -> e.packageName in dock
+        f == Filter.RECENT -> e.packageName in prefs.recent
         else -> e.kind == f.category
     }
 
     private fun buildFilters() {
         // Categories in a fixed order, only those that actually contain apps.
-        val shown = listOf(Filter.ALL, Filter.DOCK) +
+        val hasRecent = prefs.recent.any { pkg -> all.any { it.packageName == pkg } }
+        val shown = listOf(Filter.ALL) + (if (hasRecent) listOf(Filter.RECENT) else emptyList()) + listOf(Filter.DOCK) +
             AppCategory.values().filter { c -> all.any { it.kind == c } }.map(Filter::of)
         if (filter !in shown) filter = Filter.ALL
         if (filterViews.keys == shown.toSet()) { syncFilters(); return }
@@ -164,7 +167,11 @@ class AllAppsActivity : Activity() {
 
     private fun render(focusFirst: Boolean, keepFocus: Boolean = true) {
         val q = search.text.toString().trim()
-        val list = all.filter { matches(it, filter) && (q.isEmpty() || it.label.contains(q, ignoreCase = true)) }
+        var list = all.filter { matches(it, filter) && (q.isEmpty() || it.label.contains(q, ignoreCase = true)) }
+        if (filter == Filter.RECENT) {
+            val order = prefs.recent.withIndex().associate { it.value to it.index }
+            list = list.sortedBy { order[it.packageName] ?: Int.MAX_VALUE }
+        }
         val keep = currentFocus
         val keepIdx = tilePool.indexOfFirst { it.root === keep }
 
@@ -279,6 +286,7 @@ class AllAppsActivity : Activity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (Launch.handleSourceKey(this, event)) return true
         val select = event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER || event.keyCode == KeyEvent.KEYCODE_ENTER ||
             event.keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER
         val focusedTile = currentFocus?.tag as? TileHolder

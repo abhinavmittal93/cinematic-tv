@@ -17,6 +17,8 @@ class CinematicDream : DreamService() {
     private lateinit var b: ImageView
     private var front: ImageView? = null
     private var index = -1
+    private lateinit var prefs: Prefs
+    private val showMs get() = prefs.photoSeconds * 1000L
     private var step = 0
     private val tick = Runnable { next() }
     private val onPhotos: () -> Unit = { if (index < 0) next() }
@@ -29,6 +31,8 @@ class CinematicDream : DreamService() {
         setContentView(R.layout.dream)
         a = findViewById(R.id.photoA)
         b = findViewById(R.id.photoB)
+        prefs = Prefs(this)
+        findViewById<View>(R.id.clockBlock).visibility = if (prefs.dreamClock) View.VISIBLE else View.GONE
     }
 
     override fun onDreamingStarted() {
@@ -67,11 +71,12 @@ class CinematicDream : DreamService() {
             }?.start()
             front = back
             caption(p)
-            a.postDelayed(tick, SHOW_MS)
+            a.postDelayed(tick, showMs)
         }
     }
 
     private fun kenBurns(v: ImageView) {
+        if (!prefs.dreamMotion) { v.scaleX = 1f; v.scaleY = 1f; v.translationX = 0f; v.translationY = 0f; return }
         // Alternate zoom direction and pan corner for variety.
         val s0 = if (step % 2 == 0) 1.0f else 1.12f
         val s1 = if (step % 2 == 0) 1.12f else 1.0f
@@ -81,7 +86,7 @@ class CinematicDream : DreamService() {
         v.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         v.scaleX = s0; v.scaleY = s0; v.translationX = -dx; v.translationY = -dy
         v.animate().scaleX(s1).scaleY(s1).translationX(dx).translationY(dy)
-            .setDuration(SHOW_MS + FADE_MS).setInterpolator(LinearInterpolator()).start()
+            .setDuration(showMs + FADE_MS).setInterpolator(LinearInterpolator()).start()
     }
 
     private fun caption(p: Photo) {
@@ -94,7 +99,6 @@ class CinematicDream : DreamService() {
     }
 
     private companion object {
-        const val SHOW_MS = 20_000L
         const val FADE_MS = 1_600L
     }
 }

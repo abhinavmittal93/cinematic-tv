@@ -86,6 +86,16 @@
                 <action android:name="android.service.dreams.DreamService" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <meta-data android:name="android.service.dream" android:resource="@xml/dream_info" />
         </service>
+
+        <!-- Exported so the system screensaver menu can open it as the dream's settings. -->
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenLayout|screenSize|uiMode"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.CinematicTV.Panel" />
     </application>
 </manifest>

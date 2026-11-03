@@ -17,6 +17,9 @@ class QuickSettingsActivity : PanelActivity() {
         row(R.drawable.ic_clock, R.string.date_time, Intent(Settings.ACTION_DATE_SETTINGS))
         row(R.drawable.ic_bell, R.string.notifications, Intent("com.android.tv.action.OPEN_NOTIFICATIONS_PANEL"))
         addDivider()
+        addRow(R.drawable.ic_tv, getString(R.string.ctv_settings)) {
+            startActivity(android.content.Intent(this, SettingsActivity::class.java)); finish()
+        }
         row(R.drawable.ic_settings, R.string.all_settings,
             Intent(Settings.ACTION_SETTINGS).setPackage("com.android.tv.settings"), Intent(Settings.ACTION_SETTINGS))
     }

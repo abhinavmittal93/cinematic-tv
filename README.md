@@ -6,8 +6,21 @@ No AndroidX, no WebView, no analytics, no ads. Network is used only for the dail
 ## Build
 Requirements: JDK 17, Android SDK platform 34 + build-tools 34 (`local.properties` → `sdk.dir`).
 ```
+./gradlew assembleRelease      # app/build/outputs/apk/release/app-release.apk (~140 KB, R8-shrunk)
 ./gradlew assembleDebug        # app/build/outputs/apk/debug/app-debug.apk
+./gradlew testDebugUnitTest    # classifier, Dock seeding, Recent ordering
 ```
+
+### Release signing
+Create `keystore.properties` in the project root (git-ignored) pointing at your own key:
+```
+storeFile=/absolute/path/to/cinematic-tv.jks
+storePassword=…
+keyAlias=…
+keyPassword=…
+```
+Without it, release builds are signed with the local debug key (fine for your own TV, not for distribution).
+Keep the key safe: updates must be signed with the same key, or the app has to be uninstalled first.
 
 ## Install / run
 ```
@@ -21,7 +34,12 @@ It also appears in the normal Android TV app list (LEANBACK_LAUNCHER).
 - **Home** — top shelf shows the focused app's artwork; Dock of favourites; round buttons for Apps, Search, Inputs, Notifications, Control Centre; clock top-right.
 - **Apps** — alphabetical grid, search-as-you-type, ★ marks apps in the Dock.
 - **Inputs** — side sheet: Live TV, HDMI, AV with connection status. Also opened by the system "view inputs" action.
-- **Control Centre** — side sheet: Wi-Fi, Sound, Date & Time, Notifications, All Settings (entries the TV doesn't support are hidden).
+- **Control Centre** — side sheet: Wi-Fi, Sound, Date & Time, Notifications, Cinematic TV Settings, All Settings
+  (entries the TV doesn't support are hidden; the Philips picture menu has no public entry point).
+- **Cinematic TV Settings** — daily photos on/off (off deletes the cache and stops all network use), photo change
+  interval (15/25/45/90 s), screensaver clock and motion, preview screensaver, clear recently used.
+  Also opens from the system screensaver menu.
+- **Recent** — Apps has a Recent filter (last 12 apps opened from Cinematic TV), stored only on the TV.
 
 ## Photos & screensaver
 - Daily landscape photos from Bing's public image archive (www.bing.com only; no account/key), refreshed every 12 h,
@@ -49,6 +67,9 @@ Preview now: `adb -s 10.0.0.6:5555 shell am start -n com.android.systemui/.Somna
 | Edit Dock | Back | Done (order saved) |
 | Apps | OK / Hold OK | Open / add-or-remove from Dock |
 | Apps | ▲ to search box, OK | Type to filter; Back returns to the grid |
+
+The remote's Source key is handled by the TV firmware (MediaTek source menu) and never reaches the launcher;
+use the Inputs button on Home instead.
 
 ## Make Cinematic TV the Home app (Google launcher disabled, not removed)
 On this Philips TV the Google launcher's Home filter outranks the user preference, so it must be
@@ -83,3 +104,6 @@ the Google launcher — run `pm enable` first.
 - `QuickSettingsActivity.kt` — Control Centre sheet
 - `Photos.kt` — daily photo fetch, disk cache, downsampled decode
 - `CinematicDream.kt` — screensaver
+- `SettingsActivity.kt` — Cinematic TV options
+- `Categories.kt` — app classifier
+- `app/src/test/…/LogicTest.kt` — unit tests

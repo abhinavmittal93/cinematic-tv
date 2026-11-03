@@ -62,7 +62,7 @@
         android:orientation="vertical">
         <TextView android:id="@+id/heroKicker" style="@style/T.Caption"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/up_next" />
+            android:visibility="gone" />
         <TextView android:id="@+id/heroTitle" style="@style/T.Display"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginTop="2dp" android:maxLines="1" android:ellipsize="end" />

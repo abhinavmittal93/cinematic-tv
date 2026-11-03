@@ -42,7 +42,14 @@ class MainActivity : Activity() {
     // Photo backdrop
     private var photoIndex = -1
     private val photoTick = Runnable { nextPhoto() }
-    private val onPhotos: () -> Unit = { if (photoIndex < 0) nextPhoto() }
+    private val onPhotos: () -> Unit = {
+        if (Photos.list.isEmpty()) {
+            // Photos switched off: fall back to the focused app's artwork.
+            row.removeCallbacks(photoTick); photoIndex = -1
+            findViewById<View>(R.id.photoCaption).alpha = 0f
+            heroEntry.also { heroEntry = null }?.let(::showHero) ?: fadeHero(null)
+        } else if (photoIndex < 0) nextPhoto()
+    }
 
     // Edit mode
     private var editing = false
@@ -129,7 +136,7 @@ class MainActivity : Activity() {
         super.onStart()
         Photos.init(this) // cheap; only hits the network if the cache is >12 h old
         if (Photos.list.isNotEmpty()) {
-            if (heroFront == null) nextPhoto() else row.postDelayed(photoTick, PHOTO_MS)
+            if (heroFront == null) nextPhoto() else row.postDelayed(photoTick, prefs.photoSeconds * 1000L)
         }
     }
 
@@ -144,11 +151,16 @@ class MainActivity : Activity() {
             // Up to ~16 MB of full-res photos; drop them while hidden and redecode on return.
             heroA.setImageDrawable(null); heroB.setImageDrawable(null)
             heroA.alpha = 0f; heroB.alpha = 0f; heroFront = null
+            preloadBmp = null; preloadIdx = -1
             photoIndex = (photoIndex - 1).coerceAtLeast(-1)
         }
     }
 
     // ---- Photo backdrop ----
+
+    // The next photo is decoded ahead of time so each change is just a crossfade.
+    private var preloadIdx = -1
+    private var preloadBmp: android.graphics.Bitmap? = null
 
     private fun nextPhoto() {
         row.removeCallbacks(photoTick)
@@ -156,19 +168,33 @@ class MainActivity : Activity() {
         if (list.isEmpty()) return
         photoIndex = (photoIndex + 1) % list.size
         val p = list[photoIndex]
-        // Full screen resolution, 32-bit colour: sharp detail and no banding in skies.
-        val dm = resources.displayMetrics
-        Photos.decode(p, dm.widthPixels, dm.heightPixels) { bmp ->
-            if (isDestroyed || bmp == null) return@decode
-            fadeHero(android.graphics.drawable.BitmapDrawable(resources, bmp).apply { isFilterBitmap = true }, tint = PHOTO_TINT)
-            val cap = findViewById<View>(R.id.photoCaption)
-            cap.animate().alpha(0f).setDuration(200).withEndAction {
-                findViewById<TextView>(R.id.photoTitle).text = p.title
-                findViewById<TextView>(R.id.photoSub).text = p.caption
-                cap.animate().alpha(1f).setDuration(400).start()
-            }.start()
+        val ready = preloadBmp.takeIf { preloadIdx == photoIndex }
+        preloadBmp = null; preloadIdx = -1
+        if (ready != null) showPhoto(p, ready) else {
+            val dm = resources.displayMetrics
+            Photos.decode(p, dm.widthPixels, dm.heightPixels) { bmp -> if (!isDestroyed && bmp != null) showPhoto(p, bmp) }
         }
-        row.postDelayed(photoTick, PHOTO_MS)
+        row.postDelayed(photoTick, prefs.photoSeconds * 1000L)
+    }
+
+    private fun showPhoto(p: Photo, bmp: android.graphics.Bitmap) {
+        // Full screen resolution, 32-bit colour: sharp detail and no banding in skies.
+        fadeHero(android.graphics.drawable.BitmapDrawable(resources, bmp).apply { isFilterBitmap = true }, tint = PHOTO_TINT)
+        val cap = findViewById<View>(R.id.photoCaption)
+        cap.animate().alpha(0f).setDuration(200).withEndAction {
+            findViewById<TextView>(R.id.photoTitle).text = p.title
+            findViewById<TextView>(R.id.photoSub).text = p.caption
+            cap.animate().alpha(1f).setDuration(400).start()
+        }.start()
+        // Preload the following photo a few seconds later, once this crossfade has finished.
+        val list = Photos.list
+        if (list.size < 2) return
+        val ni = (photoIndex + 1) % list.size
+        row.postDelayed({
+            if (isDestroyed || Photos.list !== list) return@postDelayed
+            val dm = resources.displayMetrics
+            Photos.decode(list[ni], dm.widthPixels, dm.heightPixels) { b -> if (b != null) { preloadIdx = ni; preloadBmp = b } }
+        }, 3000)
     }
 
     private fun bindTop(id: Int, action: () -> Unit) {
@@ -295,6 +321,7 @@ class MainActivity : Activity() {
         editBar.visibility = View.VISIBLE
         findViewById<View>(R.id.topBar).animate().alpha(0f).setDuration(150).start()
         heroKicker.setText(R.string.editing)
+        heroKicker.visibility = View.VISIBLE
         heroHint.visibility = View.GONE
         if (pickUp) toggleCarry() else editBar.setText(R.string.edit_hint)
     }
@@ -305,7 +332,7 @@ class MainActivity : Activity() {
         for (i in 0 until row.childCount) (row.getChildAt(i).tag as TileHolder).stopJiggle()
         editBar.visibility = View.GONE
         findViewById<View>(R.id.topBar).animate().alpha(1f).setDuration(150).start()
-        heroKicker.setText(R.string.up_next)
+        heroKicker.visibility = View.GONE
         heroHint.visibility = View.VISIBLE
         saveOrder()
     }
@@ -359,6 +386,7 @@ class MainActivity : Activity() {
         code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER || code == KeyEvent.KEYCODE_NUMPAD_ENTER
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (!editing && Launch.handleSourceKey(this, event)) return true
         val code = event.keyCode
         val down = event.action == KeyEvent.ACTION_DOWN
         // Key-repeat long press (reliable on every remote, unlike the view timer).
@@ -396,12 +424,18 @@ class MainActivity : Activity() {
         private const val HERO_ALPHA = 0.7f
         private const val HERO_TINT = 0xFF6E6E74.toInt()
         private const val PHOTO_TINT = 0xFFB4B4B8.toInt()
-        private const val PHOTO_MS = 25_000L
     }
 }
 
 /** Safe launching helpers shared by screens. */
 object Launch {
+    /** Remote Source/Input key → our Inputs sheet (when the system lets the key reach the app). */
+    fun handleSourceKey(a: Activity, event: KeyEvent): Boolean {
+        if (event.keyCode != KeyEvent.KEYCODE_TV_INPUT) return false
+        if (event.action == KeyEvent.ACTION_UP) a.startActivity(Intent(a, InputsActivity::class.java))
+        return true
+    }
+
     fun first(a: Activity, labelRes: Int, vararg intents: Intent): Boolean {
         for (i in intents) {
             try { a.startActivity(Intent(i).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); return true } catch (t: Throwable) {

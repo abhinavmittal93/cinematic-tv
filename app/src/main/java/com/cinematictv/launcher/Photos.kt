@@ -38,9 +38,22 @@ object Photos {
     private fun dir(ctx: Context) = File(ctx.cacheDir, "photos").apply { mkdirs() }
     private fun index(ctx: Context) = File(dir(ctx), "index.json")
 
+    /** Turn online photos on/off. Off deletes the cache and stops all network use. */
+    fun setEnabled(ctx: Context, on: Boolean) {
+        val app = ctx.applicationContext
+        if (on) {
+            app.getSharedPreferences("cinematic_tv", Context.MODE_PRIVATE).edit().remove("photos_fetched").apply()
+            init(app)
+        } else io.execute {
+            dir(app).listFiles()?.forEach { it.delete() }
+            publish(emptyList())
+        }
+    }
+
     /** Load the cached list immediately, then refresh from the network if stale. */
     fun init(ctx: Context) {
         val app = ctx.applicationContext
+        if (!Prefs(app).onlinePhotos) { if (list.isNotEmpty()) publish(emptyList()); return }
         io.execute {
             val cached = readIndex(app)
             if (cached.isNotEmpty()) publish(cached)
@@ -137,6 +150,8 @@ object Photos {
                     } else b
                 }
             } catch (t: Throwable) { Log.w(TAG, "Decode failed", t); null }
+            // Start the GPU texture upload now, off the UI thread, so the crossfade's first frame doesn't stall.
+            bmp?.prepareToDraw()
             main.post { done(bmp) }
         }
     }
