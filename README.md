@@ -1,7 +1,7 @@
 # Cinematic TV — Phase 1
 
 Lightweight, Apple TV‑inspired launcher for Android TV (min API 28). Pure Kotlin + framework Views.
-No AndroidX, no WebView, no analytics, no ads. Network is used only for the daily photos.
+No AndroidX, no WebView, no analytics, no ads. Network is used only for the daily photos (bing.com) and weather (open-meteo.com).
 
 ## Build
 Requirements: JDK 17, Android SDK platform 34 + build-tools 34 (`local.properties` → `sdk.dir`).
@@ -42,6 +42,18 @@ It also appears in the normal Android TV app list (LEANBACK_LAUNCHER).
 - **Start on Home screen** (Settings, on by default) — at boot the Philips/MediaTek firmware resumes the last TV
   input, leaving a blue "No signal" screen. Google's launcher used to cover this; Cinematic TV now brings Home
   back ~2–3 s later (early boot broadcast). Turn it off to keep the TV on its last input at power-on.
+- **Weather** — current conditions under the clock (e.g. "15° · Cloudy · Toronto") from Open-Meteo
+  (free, no key; contacts only *.open-meteo.com), refreshed every 30 min. Location defaults to the TV's time
+  zone city; change it, switch to °F or turn it off in Cinematic TV Settings.
+- **Sleep timer** — Control Centre › Sleep timer cycles Off / 30 / 60 / 90 / 120 min. To let it actually turn
+  the TV off (standby), allow Cinematic TV's "lock screen only" device admin once:
+  ```
+  adb -s 10.0.0.6:5555 shell dpm set-active-admin com.cinematictv.launcher/.SleepAdmin
+  ```
+  Without it, the timer starts the screensaver and the TV's own idle timeout powers it off later.
+  Undo: `adb -s 10.0.0.6:5555 shell dpm remove-active-admin com.cinematictv.launcher/.SleepAdmin`
+- **Backup** — your Dock and settings are saved automatically on the TV. Copy to the Mac:
+  `scripts/backup.sh` · put one back: `scripts/restore.sh <file>` then Settings › Restore backup.
 - **Recent** — Apps has a Recent filter (last 12 apps opened from Cinematic TV), stored only on the TV.
 
 ## Photos & screensaver
@@ -109,5 +121,9 @@ the Google launcher — run `pm enable` first.
 - `CinematicDream.kt` — screensaver
 - `SettingsActivity.kt` — Cinematic TV options
 - `Categories.kt` — app classifier
+- `Weather.kt` — Open-Meteo weather
+- `SleepTimer.kt` — sleep timer + lock-only device admin
+- `Backup.kt` — automatic Dock/settings backup
+- `scripts/` — backup/restore from the Mac
 - `BootReceiver.kt` — brings Home back after the firmware resumes the last input at boot
 - `app/src/test/…/LogicTest.kt` — unit tests

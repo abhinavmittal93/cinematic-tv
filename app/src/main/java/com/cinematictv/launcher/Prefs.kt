@@ -36,6 +36,36 @@ class Prefs(context: Context) {
             bootPrefs(appCtx).edit().putBoolean("start_on_home", v).apply()
         }
 
+    // Weather
+    var weatherOn: Boolean
+        get() = sp.getBoolean("weather_on", true)
+        set(v) { sp.edit().putBoolean("weather_on", v).apply() }
+    var fahrenheit: Boolean
+        get() = sp.getBoolean("fahrenheit", false)
+        set(v) { sp.edit().putBoolean("fahrenheit", v).putLong("weather_fetched", 0).apply() }
+    var weatherCity: String
+        get() = sp.getString("weather_city", null) ?: Weather.defaultCity()
+        set(v) { sp.edit().putString("weather_city", v).remove("weather_lat").remove("weather_lon")
+            .remove("weather_temp").putLong("weather_fetched", 0).apply() }
+    val weatherLat: Double get() = sp.getString("weather_lat", null)?.toDoubleOrNull() ?: Double.NaN
+    val weatherLon: Double get() = sp.getString("weather_lon", null)?.toDoubleOrNull() ?: Double.NaN
+    val weatherPlace: String get() = sp.getString("weather_place", null) ?: weatherCity
+    fun setWeatherLocation(lat: Double, lon: Double, place: String) =
+        sp.edit().putString("weather_lat", lat.toString()).putString("weather_lon", lon.toString()).putString("weather_place", place).apply()
+    var weatherTemp: Int?
+        get() = if (sp.contains("weather_temp")) sp.getInt("weather_temp", 0) else null
+        set(v) { sp.edit().apply { if (v == null) remove("weather_temp") else putInt("weather_temp", v) }.apply() }
+    var weatherText: String
+        get() = sp.getString("weather_text", "") ?: ""
+        set(v) { sp.edit().putString("weather_text", v).apply() }
+    var weatherFetched: Long
+        get() = sp.getLong("weather_fetched", 0)
+        set(v) { sp.edit().putLong("weather_fetched", v).apply() }
+
+    var sleepAt: Long
+        get() = sp.getLong("sleep_at", 0)
+        set(v) { sp.edit().putLong("sleep_at", v).apply() }
+
     // Screensaver / photo options
     var onlinePhotos: Boolean
         get() = sp.getBoolean("online_photos", true)

@@ -22,6 +22,7 @@
     </queries>
 
     <application
+        android:name=".CinematicApp"
         android:allowBackup="true"
         android:usesCleartextTraffic="false"
         android:banner="@drawable/banner"
@@ -99,6 +100,17 @@
             android:exported="true"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.CinematicTV.Panel" />
+        <receiver android:name=".SleepReceiver" android:exported="false" />
+        <receiver
+            android:name=".SleepAdmin"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data android:name="android.app.device_admin" android:resource="@xml/sleep_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".BootReceiver" android:exported="false" android:directBootAware="true">
             <intent-filter>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />

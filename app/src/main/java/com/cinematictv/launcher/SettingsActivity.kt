@@ -20,6 +20,17 @@ class SettingsActivity : PanelActivity() {
 
         toggle(R.drawable.ic_tv, R.string.opt_start_home, { prefs.startOnHome }) { prefs.startOnHome = it }
         addDivider()
+        toggle(R.drawable.ic_wifi, R.string.opt_weather, { prefs.weatherOn }) { prefs.weatherOn = it; Weather.refresh(this, force = true) {} }
+        lateinit var city: View
+        city = addRow(R.drawable.ic_search, getString(R.string.opt_weather_city), sub = prefs.weatherPlace, chevron = false) {
+            askCity { name ->
+                prefs.weatherCity = name
+                sub(city, name)
+                Weather.refresh(this, force = true) { sub(city, prefs.weatherPlace) }
+            }
+        }
+        toggle(R.drawable.ic_clock, R.string.opt_fahrenheit, { prefs.fahrenheit }) { prefs.fahrenheit = it; Weather.refresh(this, force = true) {} }
+        addDivider()
         toggle(R.drawable.ic_wifi, R.string.opt_online_photos, { prefs.onlinePhotos }) {
             prefs.onlinePhotos = it
             Photos.setEnabled(this, it)
@@ -37,6 +48,11 @@ class SettingsActivity : PanelActivity() {
             addRow(R.drawable.ic_settings, getString(R.string.opt_system_screensaver)) { Launch.first(this, R.string.settings, i) }
         }
         addDivider()
+        addRow(R.drawable.ic_settings, getString(R.string.opt_restore), sub = getString(R.string.opt_restore_sub), chevron = false) {
+            if (Backup.restore(this)) {
+                Toast.makeText(this, R.string.restored, Toast.LENGTH_SHORT).show(); recreate()
+            } else Toast.makeText(this, R.string.no_backup, Toast.LENGTH_LONG).show()
+        }
         addRow(R.drawable.ic_apps, getString(R.string.opt_clear_recent), chevron = false) {
             prefs.forgetRecent()
             Toast.makeText(this, R.string.recent_cleared, Toast.LENGTH_SHORT).show()
@@ -53,6 +69,23 @@ class SettingsActivity : PanelActivity() {
     private fun cycle(icon: Int, label: Int, value: () -> String, next: () -> Unit) {
         lateinit var row: View
         row = addRow(icon, getString(label), sub = value(), chevron = false) { next(); sub(row, value()) }
+    }
+
+    private fun askCity(done: (String) -> Unit) {
+        val input = android.widget.EditText(this).apply {
+            setText(prefs.weatherCity); setSelectAllOnFocus(true); isSingleLine = true
+            imeOptions = android.view.inputmethod.EditorInfo.IME_ACTION_DONE
+        }
+        val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setTitle(R.string.opt_weather_city)
+            .setView(input)
+            .setPositiveButton(android.R.string.ok) { _, _ -> input.text.toString().trim().takeIf { it.isNotEmpty() }?.let(done) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+        input.setOnEditorActionListener { _, _, _ ->
+            input.text.toString().trim().takeIf { it.isNotEmpty() }?.let(done); dialog.dismiss(); true
+        }
+        dialog.show()
     }
 
     private fun onOff(v: Boolean) = getString(if (v) R.string.on else R.string.off)

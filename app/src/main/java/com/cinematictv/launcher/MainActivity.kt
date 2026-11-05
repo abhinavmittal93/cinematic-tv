@@ -135,6 +135,7 @@ class MainActivity : Activity() {
     override fun onStart() {
         super.onStart()
         Photos.init(this) // cheap; only hits the network if the cache is >12 h old
+        weatherTick.run()
         if (Photos.list.isNotEmpty()) {
             if (heroFront == null) nextPhoto() else row.postDelayed(photoTick, prefs.photoSeconds * 1000L)
         }
@@ -142,6 +143,7 @@ class MainActivity : Activity() {
 
     override fun onStop() {
         row.removeCallbacks(photoTick)
+        row.removeCallbacks(weatherTick)
         super.onStop()
     }
 
@@ -154,6 +156,21 @@ class MainActivity : Activity() {
             preloadBmp = null; preloadIdx = -1
             photoIndex = (photoIndex - 1).coerceAtLeast(-1)
         }
+    }
+
+    private val weatherTick: Runnable = object : Runnable {
+        override fun run() {
+            showWeather()
+            Weather.refresh(this@MainActivity) { if (!isDestroyed) showWeather() }
+            row.postDelayed(this, 30 * 60 * 1000L)
+        }
+    }
+
+    private fun showWeather() {
+        val tv = findViewById<TextView>(R.id.weather)
+        val line = Weather.line(this)
+        tv.text = line
+        tv.visibility = if (line == null) View.GONE else View.VISIBLE
     }
 
     // ---- Photo backdrop ----

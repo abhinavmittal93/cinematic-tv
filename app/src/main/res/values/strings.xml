@@ -61,4 +61,14 @@
     <string name="opt_clear_recent">Clear recently used</string>
     <string name="recent_cleared">Recently used cleared</string>
     <string name="opt_start_home">Start on Home screen</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="sleep_in">In %1$d min (at %2$s)</string>
+    <string name="sleep_saver">screensaver</string>
+    <string name="opt_weather">Weather on Home</string>
+    <string name="opt_weather_city">Weather location</string>
+    <string name="opt_fahrenheit">Fahrenheit</string>
+    <string name="opt_restore">Restore backup</string>
+    <string name="opt_restore_sub">From cinematic-tv-backup.json</string>
+    <string name="restored">Dock and settings restored</string>
+    <string name="no_backup">No backup found. Push one with scripts/restore.sh first.</string>
 </resources>
