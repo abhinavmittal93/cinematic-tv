@@ -39,6 +39,9 @@ It also appears in the normal Android TV app list (LEANBACK_LAUNCHER).
 - **Cinematic TV Settings** — daily photos on/off (off deletes the cache and stops all network use), photo change
   interval (15/25/45/90 s), screensaver clock and motion, preview screensaver, clear recently used.
   Also opens from the system screensaver menu.
+- **Start on Home screen** (Settings, on by default) — at boot the Philips/MediaTek firmware resumes the last TV
+  input, leaving a blue "No signal" screen. Google's launcher used to cover this; Cinematic TV now brings Home
+  back ~2–3 s later (early boot broadcast). Turn it off to keep the TV on its last input at power-on.
 - **Recent** — Apps has a Recent filter (last 12 apps opened from Cinematic TV), stored only on the TV.
 
 ## Photos & screensaver
@@ -106,4 +109,5 @@ the Google launcher — run `pm enable` first.
 - `CinematicDream.kt` — screensaver
 - `SettingsActivity.kt` — Cinematic TV options
 - `Categories.kt` — app classifier
+- `BootReceiver.kt` — brings Home back after the firmware resumes the last input at boot
 - `app/src/test/…/LogicTest.kt` — unit tests

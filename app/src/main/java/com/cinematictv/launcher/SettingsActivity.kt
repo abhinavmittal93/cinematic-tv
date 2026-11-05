@@ -18,6 +18,8 @@ class SettingsActivity : PanelActivity() {
     override fun build() {
         prefs = Prefs(this)
 
+        toggle(R.drawable.ic_tv, R.string.opt_start_home, { prefs.startOnHome }) { prefs.startOnHome = it }
+        addDivider()
         toggle(R.drawable.ic_wifi, R.string.opt_online_photos, { prefs.onlinePhotos }) {
             prefs.onlinePhotos = it
             Photos.setEnabled(this, it)

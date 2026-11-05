@@ -3,6 +3,8 @@
 
     <!-- Only used to fetch daily photos from www.bing.com. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Used only to bring Home back after the TV firmware resumes the last input at boot. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
@@ -97,5 +99,11 @@
             android:exported="true"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.CinematicTV.Panel" />
+        <receiver android:name=".BootReceiver" android:exported="false" android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

@@ -4,6 +4,7 @@ import android.content.Context
 
 /** Ordered favourites, persisted in SharedPreferences. */
 class Prefs(context: Context) {
+    private val appCtx = context.applicationContext
     private val sp = context.getSharedPreferences("cinematic_tv", Context.MODE_PRIVATE)
 
     var seeded: Boolean
@@ -27,6 +28,14 @@ class Prefs(context: Context) {
 
     fun forgetRecent() = sp.edit().remove("recent").apply()
 
+    /** Bring Home back after boot instead of staying on the last TV input. */
+    var startOnHome: Boolean
+        get() = sp.getBoolean("start_on_home", true)
+        set(v) {
+            sp.edit().putBoolean("start_on_home", v).apply()
+            bootPrefs(appCtx).edit().putBoolean("start_on_home", v).apply()
+        }
+
     // Screensaver / photo options
     var onlinePhotos: Boolean
         get() = sp.getBoolean("online_photos", true)
@@ -49,6 +58,10 @@ class Prefs(context: Context) {
     }
 
     companion object {
+        /** Device-protected copy of boot options, readable before the user is unlocked (early boot). */
+        fun bootPrefs(ctx: Context) =
+            ctx.createDeviceProtectedStorageContext().getSharedPreferences("cinematic_tv_boot", Context.MODE_PRIVATE)
+
         /** Preferred order for well-known streaming apps — used only if they are actually installed. */
         val PREFERRED = listOf(
             "com.netflix.ninja", "com.netflix.mediaclient",

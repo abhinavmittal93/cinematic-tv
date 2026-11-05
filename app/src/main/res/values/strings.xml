@@ -60,4 +60,5 @@
     <string name="opt_system_screensaver">System screensaver settings</string>
     <string name="opt_clear_recent">Clear recently used</string>
     <string name="recent_cleared">Recently used cleared</string>
+    <string name="opt_start_home">Start on Home screen</string>
 </resources>
