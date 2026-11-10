@@ -57,8 +57,14 @@
             android:name=".AllAppsActivity"
             android:windowSoftInputMode="adjustNothing|stateHidden"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenLayout|screenSize|uiMode"
-            android:exported="false"
-            android:screenOrientation="landscape" />
+            android:exported="true"
+            android:screenOrientation="landscape" >
+            <!-- Lets another home screen (e.g. Castle Home) open this screen. -->
+            <intent-filter>
+                <action android:name="com.cinematictv.launcher.action.ALL_APPS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <!-- Answers the system "view inputs" action (remote Source key). -->
         <activity
             android:name=".InputsActivity"
@@ -77,9 +83,15 @@
             android:name=".QuickSettingsActivity"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenLayout|screenSize|uiMode"
             android:excludeFromRecents="true"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.CinematicTV.Panel" />
+            android:theme="@style/Theme.CinematicTV.Panel" >
+            <!-- Lets another home screen (e.g. Castle Home) open this screen. -->
+            <intent-filter>
+                <action android:name="com.cinematictv.launcher.action.CONTROL_CENTRE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <service
             android:name=".CinematicDream"
             android:exported="true"

@@ -300,7 +300,8 @@ class AllAppsActivity : Activity() {
             return true
         }
         // Back from the header returns to the grid; Back from the grid leaves.
-        if (event.keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP && focusedTile == null && firstTile() != null) {
+        val inHeader = currentFocus === search || filterViews.values.any { it === currentFocus }
+        if (event.keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP && inHeader && firstTile() != null) {
             hideIme(); firstTile()?.requestFocus(); return true
         }
         return super.dispatchKeyEvent(event)
